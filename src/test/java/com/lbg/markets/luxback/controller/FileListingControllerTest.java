@@ -1,5 +1,6 @@
 package com.lbg.markets.luxback.controller;
 
+import com.lbg.markets.luxback.config.TestConfig;
 import com.lbg.markets.luxback.model.AuditEvent;
 import com.lbg.markets.luxback.model.SearchCriteria;
 import com.lbg.markets.luxback.service.AuditService;
@@ -29,8 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebMvcTest(FileListingController.class)
 @ActiveProfiles("dev-local")
-@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class,
-         com.lbg.markets.luxback.config.LuxBackConfig.class})
+@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class, TestConfig.class})
 class FileListingControllerTest {
 
     @Autowired

@@ -1,5 +1,6 @@
 package com.lbg.markets.luxback.config;
 
+import com.lbg.markets.luxback.security.CustomAccessDeniedHandler;
 import com.lbg.markets.luxback.security.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class DevSecurityConfig {
     
     private final LuxBackConfig config;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,7 +50,11 @@ public class DevSecurityConfig {
                 .and()
                 .logout()
                     .logoutSuccessUrl("/login?logout")
-                    .permitAll();
+                    .permitAll()
+                .and()
+                .exceptionHandling(exceptions -> exceptions
+                        .accessDeniedHandler(accessDeniedHandler)
+                );
         
         return http.build();
     }

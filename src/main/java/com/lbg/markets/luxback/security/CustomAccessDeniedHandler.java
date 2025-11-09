@@ -12,7 +12,7 @@ import java.io.IOException;
 
 /**
  * Custom handler for access denied (403 Forbidden) errors.
- * Logs the violation and redirects to error page.
+ * Logs the violation and returns proper 403 status with error page.
  */
 @Component
 @Slf4j
@@ -31,8 +31,11 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         log.warn("Access denied: user={}, path={}, method={}",
                 username, request.getRequestURI(), request.getMethod());
 
-        // Forward to error page with 403 status
+        // Set the response status to 403 BEFORE forwarding
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         request.setAttribute("javax.servlet.error.status_code", HttpServletResponse.SC_FORBIDDEN);
+        
+        // Forward to error page
         request.getRequestDispatcher("/error").forward(request, response);
     }
 }

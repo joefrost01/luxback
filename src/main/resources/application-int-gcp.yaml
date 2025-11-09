@@ -26,6 +26,14 @@ spring:
           azure:
             issuer-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/v2.0
 
+# Azure AD Group Mappings
+# Replace these GUIDs with your actual Azure AD security group object IDs
+azure:
+  ad:
+    groups:
+      admin: ${AZURE_ADMIN_GROUP_ID:}  # Azure AD group object ID for admins
+      user: ${AZURE_USER_GROUP_ID:}    # Azure AD group object ID for users
+
 # Logging configuration
 logging:
   level:

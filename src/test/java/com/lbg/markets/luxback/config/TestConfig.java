@@ -1,5 +1,6 @@
 package com.lbg.markets.luxback.config;
 
+import com.lbg.markets.luxback.security.CustomAccessDeniedHandler;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -7,8 +8,8 @@ import org.springframework.context.annotation.Primary;
 import java.util.List;
 
 /**
- * Test configuration that provides a properly initialized LuxBackConfig
- * for use in @WebMvcTest tests where @ConfigurationProperties binding doesn't work.
+ * Test configuration that provides properly initialized beans for tests.
+ * Used in @WebMvcTest tests where @ConfigurationProperties binding doesn't work.
  */
 @TestConfiguration
 public class TestConfig {
@@ -41,5 +42,14 @@ public class TestConfig {
         ));
 
         return config;
+    }
+
+    /**
+     * Provide CustomAccessDeniedHandler bean for tests.
+     * This is required by DevSecurityConfig but not automatically available in @WebMvcTest.
+     */
+    @Bean
+    public CustomAccessDeniedHandler customAccessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
     }
 }
