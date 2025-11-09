@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -30,7 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebMvcTest(FileListingController.class)
 @ActiveProfiles("dev-local")
-@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class})
+@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class,
+         com.lbg.markets.luxback.config.LuxBackConfig.class})
 class FileListingControllerTest {
 
     @Autowired

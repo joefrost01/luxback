@@ -27,7 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebMvcTest(DownloadController.class)
 @ActiveProfiles("dev-local")
-@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class})
+@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class,
+        com.lbg.markets.luxback.config.LuxBackConfig.class})
 class DownloadControllerTest {
 
     @Autowired
