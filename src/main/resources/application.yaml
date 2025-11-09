@@ -1,3 +1,5 @@
 spring:
   application:
     name: luxback
+  profiles:
+    active: dev-local
