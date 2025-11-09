@@ -25,10 +25,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Profile("dev-local")
 @RequiredArgsConstructor
 public class DevSecurityConfig {
-    
+
     private final LuxBackConfig config;
     private final CustomAccessDeniedHandler accessDeniedHandler;
-    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -45,20 +45,20 @@ public class DevSecurityConfig {
                 .httpBasic()
                 .and()
                 .formLogin()
-                    .loginPage("/login")
-                    .permitAll()
+                .loginPage("/login")
+                .permitAll()
                 .and()
                 .logout()
-                    .logoutSuccessUrl("/login?logout")
-                    .permitAll()
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
                 .and()
                 .exceptionHandling(exceptions -> exceptions
                         .accessDeniedHandler(accessDeniedHandler)
                 );
-        
+
         return http.build();
     }
-    
+
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user = User.builder()
@@ -66,13 +66,13 @@ public class DevSecurityConfig {
                 .password("{noop}" + config.getSecurity().getDevPassword())
                 .roles(Role.USER.name())
                 .build();
-        
+
         UserDetails admin = User.builder()
                 .username(config.getSecurity().getAdminUsername())
                 .password("{noop}" + config.getSecurity().getAdminPassword())
                 .roles(Role.ADMIN.name())
                 .build();
-        
+
         return new InMemoryUserDetailsManager(user, admin);
     }
 }

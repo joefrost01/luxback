@@ -17,7 +17,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
@@ -61,7 +62,7 @@ class AuditServiceTest {
     void recordUpload_shouldCreateNewCsvFileWithHeaders() {
         // Arrange
         setupMockRequest(); // Setup request mock for this test
-        
+
         String username = "joe.bloggs";
         FileMetadata metadata = FileMetadata.builder()
                 .originalFilename("document.pdf")
@@ -97,7 +98,7 @@ class AuditServiceTest {
     void recordUpload_shouldAppendToExistingCsvFile() {
         // Arrange
         setupMockRequest(); // Setup request mock for this test
-        
+
         String username = "joe.bloggs";
         FileMetadata metadata = FileMetadata.builder()
                 .originalFilename("report.xlsx")
@@ -120,7 +121,7 @@ class AuditServiceTest {
     void recordDownload_shouldAppendDownloadEventWithDownloaderUsername() {
         // Arrange
         setupMockRequest(); // Setup request mock for this test
-        
+
         String fileOwner = "joe.bloggs";
         String downloaderUsername = "admin";
         String originalFilename = "document.pdf";
@@ -327,7 +328,7 @@ class AuditServiceTest {
     void recordUpload_shouldInvalidateCacheForUser() {
         // Arrange
         setupMockRequest(); // Setup request mock for this test
-        
+
         String username = "joe.bloggs";
         String csvContent = """
                 event_id,event_type,timestamp,username,filename,stored_as,file_size,content_type,ip_address,user_agent,session_id,actor_username

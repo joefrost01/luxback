@@ -34,7 +34,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         // Set the response status to 403 BEFORE forwarding
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         request.setAttribute("javax.servlet.error.status_code", HttpServletResponse.SC_FORBIDDEN);
-        
+
         // Forward to error page
         request.getRequestDispatcher("/error").forward(request, response);
     }

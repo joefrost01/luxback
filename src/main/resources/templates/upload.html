@@ -87,7 +87,9 @@
                                     <strong sec:authentication="name">User</strong>
                                 </span>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form th:action="@{/logout}" method="post">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -183,13 +185,13 @@
             [header]: token
         },
 
-        init: function() {
-            this.on("sending", function(file, xhr, formData) {
+        init: function () {
+            this.on("sending", function (file, xhr, formData) {
                 console.log("Sending file:", file.name);
                 console.log("Adding CSRF token to request");
             });
 
-            this.on("success", function(file, response) {
+            this.on("success", function (file, response) {
                 console.log("Upload successful:", response);
                 var message = response.message || "File uploaded successfully";
                 showStatus("success", message);
@@ -200,7 +202,7 @@
                 }, 2000);
             });
 
-            this.on("error", function(file, errorMessage, xhr) {
+            this.on("error", function (file, errorMessage, xhr) {
                 console.error("Upload failed:", errorMessage);
                 console.error("XHR status:", xhr ? xhr.status : 'N/A');
 
@@ -221,7 +223,7 @@
                 }, 3000);
             });
 
-            this.on("complete", function(file) {
+            this.on("complete", function (file) {
                 console.log("Upload complete:", file.name);
             });
         }

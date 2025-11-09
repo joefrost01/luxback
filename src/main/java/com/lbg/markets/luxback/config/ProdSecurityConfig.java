@@ -22,10 +22,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Profile({"int-gcp", "pre-prod-gcp", "prod-gcp"})
 @RequiredArgsConstructor
 public class ProdSecurityConfig {
-    
+
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final GrantedAuthoritiesMapper authoritiesMapper;
-    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -53,7 +53,7 @@ public class ProdSecurityConfig {
                 .exceptionHandling(exceptions -> exceptions
                         .accessDeniedHandler(accessDeniedHandler)
                 );
-        
+
         return http.build();
     }
 }

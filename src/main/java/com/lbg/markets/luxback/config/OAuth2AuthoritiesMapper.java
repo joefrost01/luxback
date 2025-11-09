@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * Maps Azure AD group membership to Spring Security roles.
  * Extracts the 'groups' claim from Azure AD tokens and maps group IDs to application roles.
- * 
+ * <p>
  * Configuration required in application-{profile}.yml:
  * <pre>
  * azure:
@@ -61,7 +61,7 @@ public class OAuth2AuthoritiesMapper implements GrantedAuthoritiesMapper {
             if (authority instanceof OidcUserAuthority oidcUserAuthority) {
                 // Extract user attributes from OIDC token
                 Map<String, Object> attributes = oidcUserAuthority.getAttributes();
-                
+
                 // Log user info for debugging (without sensitive data)
                 String email = (String) attributes.get("email");
                 String name = (String) attributes.get("name");
@@ -69,7 +69,7 @@ public class OAuth2AuthoritiesMapper implements GrantedAuthoritiesMapper {
 
                 // Extract groups claim - this contains Azure AD group memberships
                 Object groupsClaim = attributes.get("groups");
-                
+
                 if (groupsClaim instanceof List<?> groupsList) {
                     Set<String> userGroups = new HashSet<>();
                     for (Object group : groupsList) {

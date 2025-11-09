@@ -10,22 +10,22 @@ import lombok.Data;
 @Data
 @Builder
 public class FileMetadata {
-    
+
     /**
      * Original filename as provided by user
      */
     private String originalFilename;
-    
+
     /**
      * Storage filename (timestamp-prefixed)
      */
     private String storedFilename;
-    
+
     /**
      * File size in bytes
      */
     private long size;
-    
+
     /**
      * MIME type
      */

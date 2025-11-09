@@ -34,13 +34,15 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" th:classappend="${#httpServletRequest.requestURI == '/' or #httpServletRequest.requestURI == '/upload'} ? 'active'"
+                    <a class="nav-link"
+                       th:classappend="${#httpServletRequest.requestURI == '/' or #httpServletRequest.requestURI == '/upload'} ? 'active'"
                        href="/">
                         <i class="bi bi-upload"></i> Upload
                     </a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                    <a class="nav-link" th:classappend="${#httpServletRequest.requestURI.startsWith('/files')} ? 'active'"
+                    <a class="nav-link"
+                       th:classappend="${#httpServletRequest.requestURI.startsWith('/files')} ? 'active'"
                        href="/files">
                         <i class="bi bi-folder2-open"></i> Files
                     </a>
@@ -61,7 +63,9 @@
                                     <strong sec:authentication="name">User</strong>
                                 </span>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form th:action="@{/logout}" method="post">
                                 <button class="dropdown-item" type="submit">

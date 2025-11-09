@@ -10,10 +10,10 @@ import java.util.Collection;
  * Utility class for accessing security context information
  */
 public class SecurityUtils {
-    
+
     /**
      * Get the username of the currently authenticated user
-     * 
+     *
      * @return username or null if not authenticated
      */
     public static String getCurrentUsername() {
@@ -23,10 +23,10 @@ public class SecurityUtils {
         }
         return authentication.getName();
     }
-    
+
     /**
      * Check if current user has a specific role
-     * 
+     *
      * @param role the role to check
      * @return true if user has the role
      */
@@ -35,17 +35,17 @@ public class SecurityUtils {
         if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
-        
+
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String roleString = "ROLE_" + role.name();
-        
+
         return authorities.stream()
                 .anyMatch(auth -> auth.getAuthority().equals(roleString));
     }
-    
+
     /**
      * Check if current user is an admin
-     * 
+     *
      * @return true if user has ADMIN role
      */
     public static boolean isAdmin() {

@@ -8,7 +8,7 @@ public enum Role {
      * Regular user - can upload files
      */
     USER,
-    
+
     /**
      * Administrator - can upload files and browse/download all files
      */
