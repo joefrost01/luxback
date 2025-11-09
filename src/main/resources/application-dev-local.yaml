@@ -1,0 +1,35 @@
+luxback:
+  storage-path: /tmp/luxback/backups
+  audit-index-path: /tmp/luxback/audit-indexes
+  max-file-size: 104857600  # 100MB
+  allowed-content-types:
+    - application/pdf
+    - application/vnd.ms-excel
+    - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+    - text/plain
+    - text/csv
+    - image/png
+    - image/jpeg
+  security:
+    dev-username: user
+    dev-password: userpass
+    admin-username: admin
+    admin-password: adminpass
+
+# Logging configuration for development
+logging:
+  level:
+    com.lbg.markets.luxback: DEBUG
+    org.springframework.security: DEBUG
+  pattern:
+    console: "%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n"
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
