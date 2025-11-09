@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title != null ? title : 'Error'} + ' - LuxBack'">Error - LuxBack</title>
+
+    <!-- Bootstrap CSS - Flatly theme -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/flatly/bootstrap.min.css">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <style>
+        .error-container {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-icon {
+            font-size: 5rem;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation bar (only if authenticated) -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" sec:authorize="isAuthenticated()">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <i class="bi bi-cloud-arrow-up-fill"></i> LuxBack
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">
+                        <i class="bi bi-upload"></i> Upload
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" href="/files">
+                        <i class="bi bi-folder2-open"></i> Files
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button"
+                       data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle"></i>
+                        <span sec:authentication="name">User</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                                <span class="dropdown-item-text">
+                                    <small class="text-muted">Logged in as</small><br>
+                                    <strong sec:authentication="name">User</strong>
+                                </span>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post">
+                                <button class="dropdown-item" type="submit">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Error content -->
+<div class="container error-container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 text-center">
+            <i class="bi bi-exclamation-triangle error-icon"></i>
+
+            <h1 class="mt-4" th:text="${title != null ? title : 'Error'}">Error</h1>
+
+            <p class="lead mt-3" th:text="${message != null ? message : 'An unexpected error occurred'}">
+                An unexpected error occurred
+            </p>
+
+            <div class="mt-4">
+                <a href="/" class="btn btn-primary">
+                    <i class="bi bi-house"></i> Return to Upload
+                </a>
+
+                <a href="/files" class="btn btn-secondary" sec:authorize="hasRole('ADMIN')">
+                    <i class="bi bi-folder2-open"></i> View Files
+                </a>
+            </div>
+
+            <div class="mt-5 text-muted">
+                <p class="small">
+                    If this problem persists, please contact support.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="mt-5 py-3 bg-light">
+    <div class="container text-center text-muted">
+        <small>LuxBack &copy; 2024 | Simple File Backup Service</small>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

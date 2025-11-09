@@ -1,0 +1,45 @@
+luxback:
+  storage-path: gs://luxback-prod/backups
+  audit-index-path: gs://luxback-prod/audit-indexes
+  max-file-size: 104857600  # 100MB
+  allowed-content-types:
+    - application/pdf
+    - application/vnd.ms-excel
+    - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+    - text/plain
+    - text/csv
+    - image/png
+    - image/jpeg
+
+# Azure AD OAuth2 configuration
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          azure:
+            client-id: ${AZURE_CLIENT_ID}
+            client-secret: ${AZURE_CLIENT_SECRET}
+            scope: openid, profile, email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          azure:
+            issuer-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/v2.0
+
+# Logging configuration - production settings
+logging:
+  level:
+    com.lbg.markets.luxback: WARN
+    org.springframework.security: WARN
+  pattern:
+    console: "%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n"
+
+# Actuator endpoints - minimal exposure in production
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
