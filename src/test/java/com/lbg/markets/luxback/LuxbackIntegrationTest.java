@@ -1,5 +1,6 @@
 package com.lbg.markets.luxback;
 
+import com.lbg.markets.luxback.config.TestConfig;
 import com.lbg.markets.luxback.service.AuditService;
 import com.lbg.markets.luxback.service.StorageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -28,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev-local")
+@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class, TestConfig.class})
 class LuxbackIntegrationTest {
 
     @Autowired

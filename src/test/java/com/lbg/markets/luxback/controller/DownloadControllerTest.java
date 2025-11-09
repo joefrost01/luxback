@@ -1,6 +1,6 @@
 package com.lbg.markets.luxback.controller;
 
-import com.lbg.markets.luxback.config.LuxBackConfig;
+import com.lbg.markets.luxback.config.TestConfig;
 import com.lbg.markets.luxback.exception.StorageException;
 import com.lbg.markets.luxback.service.AuditService;
 import com.lbg.markets.luxback.service.StorageService;
@@ -27,8 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebMvcTest(DownloadController.class)
 @ActiveProfiles("dev-local")
-@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class,
-        com.lbg.markets.luxback.config.LuxBackConfig.class})
+@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class, TestConfig.class})
 class DownloadControllerTest {
 
     @Autowired
@@ -39,9 +38,6 @@ class DownloadControllerTest {
 
     @MockBean
     private AuditService auditService;
-
-    @MockBean
-    private LuxBackConfig config;
 
     @Test
     void downloadFile_shouldRequireAuthentication() throws Exception {
@@ -70,7 +66,6 @@ class DownloadControllerTest {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(
                 fileContent.getBytes(StandardCharsets.UTF_8));
 
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(storageService.exists(anyString())).thenReturn(true);
         when(storageService.readFile(anyString())).thenReturn(inputStream);
         when(auditService.getOriginalFilename("joe.bloggs", "2024-11-09T14-30-00_document.pdf"))
@@ -97,7 +92,6 @@ class DownloadControllerTest {
     @WithMockUser(username = "admin", roles = "ADMIN")
     void downloadFile_shouldReturnNotFoundWhenFileDoesNotExist() throws Exception {
         // Arrange
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(storageService.exists(anyString())).thenReturn(false);
 
         // Act & Assert
@@ -112,7 +106,6 @@ class DownloadControllerTest {
     @WithMockUser(username = "admin", roles = "ADMIN")
     void downloadFile_shouldHandleStorageException() throws Exception {
         // Arrange
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(storageService.exists(anyString())).thenReturn(true);
         when(storageService.readFile(anyString()))
                 .thenThrow(new StorageException("Storage unavailable"));
@@ -137,7 +130,6 @@ class DownloadControllerTest {
         }
         ByteArrayInputStream inputStream = new ByteArrayInputStream(largeContent);
 
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(storageService.exists(anyString())).thenReturn(true);
         when(storageService.readFile(anyString())).thenReturn(inputStream);
         when(auditService.getOriginalFilename("joe.bloggs", "2024-11-09T14-30-00_large.bin"))
@@ -160,7 +152,6 @@ class DownloadControllerTest {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(
                 fileContent.getBytes(StandardCharsets.UTF_8));
 
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(storageService.exists(anyString())).thenReturn(true);
         when(storageService.readFile(anyString())).thenReturn(inputStream);
         when(auditService.getOriginalFilename("joe.bloggs", "2024-11-09T14-30-00_My_Document.pdf"))
@@ -180,7 +171,6 @@ class DownloadControllerTest {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(
                 fileContent.getBytes(StandardCharsets.UTF_8));
 
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(storageService.exists(anyString())).thenReturn(true);
         when(storageService.readFile(anyString())).thenReturn(inputStream);
         when(auditService.getOriginalFilename("joe.bloggs", "2024-11-09T14-30-00_file_name.pdf"))
@@ -200,7 +190,6 @@ class DownloadControllerTest {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(
                 fileContent.getBytes(StandardCharsets.UTF_8));
 
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(storageService.exists(anyString())).thenReturn(true);
         when(storageService.readFile(anyString())).thenReturn(inputStream);
         when(auditService.getOriginalFilename(anyString(), anyString())).thenReturn("document.pdf");
@@ -225,7 +214,6 @@ class DownloadControllerTest {
         // Arrange - empty file
         ByteArrayInputStream inputStream = new ByteArrayInputStream(new byte[0]);
 
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(storageService.exists(anyString())).thenReturn(true);
         when(storageService.readFile(anyString())).thenReturn(inputStream);
         when(auditService.getOriginalFilename(anyString(), anyString())).thenReturn("empty.txt");
@@ -247,7 +235,6 @@ class DownloadControllerTest {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(
                 fileContent.getBytes(StandardCharsets.UTF_8));
 
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(storageService.exists(anyString())).thenReturn(true);
         when(storageService.readFile(anyString())).thenReturn(inputStream);
         when(auditService.getOriginalFilename(anyString(), anyString())).thenReturn("document.pdf");
@@ -274,7 +261,6 @@ class DownloadControllerTest {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(
                 fileContent.getBytes(StandardCharsets.UTF_8));
 
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(storageService.exists(anyString())).thenReturn(true);
         when(storageService.readFile(anyString())).thenReturn(inputStream);
         when(auditService.getOriginalFilename(anyString(), anyString())).thenReturn("document.pdf");
@@ -296,7 +282,6 @@ class DownloadControllerTest {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(
                 fileContent.getBytes(StandardCharsets.UTF_8));
 
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(storageService.exists(anyString())).thenReturn(true);
         when(storageService.readFile(anyString())).thenReturn(inputStream);
         // Simulate audit service returning stored filename as fallback

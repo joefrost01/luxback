@@ -1,6 +1,6 @@
 package com.lbg.markets.luxback.controller;
 
-import com.lbg.markets.luxback.config.LuxBackConfig;
+import com.lbg.markets.luxback.config.TestConfig;
 import com.lbg.markets.luxback.service.AuditService;
 import com.lbg.markets.luxback.service.FileMetadataService;
 import com.lbg.markets.luxback.service.StorageService;
@@ -13,8 +13,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -29,8 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebMvcTest(UploadController.class)
 @ActiveProfiles("dev-local")
-@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class,
-        com.lbg.markets.luxback.config.LuxBackConfig.class})
+@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class, TestConfig.class})
 class UploadControllerTest {
 
     @Autowired
@@ -45,9 +42,6 @@ class UploadControllerTest {
     @MockBean
     private FileMetadataService fileMetadataService;
 
-    @MockBean
-    private LuxBackConfig config;
-
     @Test
     void uploadPage_shouldRequireAuthentication() throws Exception {
         // Act & Assert
@@ -58,9 +52,6 @@ class UploadControllerTest {
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void uploadPage_shouldBeAccessibleByUser() throws Exception {
-        // Arrange
-        when(config.getMaxFileSize()).thenReturn(104857600L);
-
         // Act & Assert
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -72,9 +63,6 @@ class UploadControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     void uploadPage_shouldBeAccessibleByAdmin() throws Exception {
-        // Arrange
-        when(config.getMaxFileSize()).thenReturn(104857600L);
-
         // Act & Assert
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -94,9 +82,6 @@ class UploadControllerTest {
                 "PDF content".getBytes()
         );
 
-        when(config.getMaxFileSize()).thenReturn(104857600L);
-        when(config.getAllowedContentTypes()).thenReturn(List.of("application/pdf"));
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(fileMetadataService.generateStorageFilename("document.pdf"))
                 .thenReturn("2024-11-09T14-30-00_document.pdf");
 
@@ -129,7 +114,6 @@ class UploadControllerTest {
                 largeContent
         );
 
-        when(config.getMaxFileSize()).thenReturn(100 * 1024 * 1024L);
         doThrow(new com.lbg.markets.luxback.exception.FileSizeExceededException("File exceeds maximum size of 100 MB"))
                 .when(fileMetadataService).validateFileSize(anyLong());
 
@@ -157,7 +141,6 @@ class UploadControllerTest {
                 "Executable content".getBytes()
         );
 
-        when(config.getMaxFileSize()).thenReturn(104857600L);
         doNothing().when(fileMetadataService).validateFileSize(anyLong());
         doThrow(new com.lbg.markets.luxback.exception.InvalidFileTypeException(
                 "File type 'application/x-executable' is not allowed"))
@@ -225,9 +208,6 @@ class UploadControllerTest {
                 "PDF content".getBytes()
         );
 
-        when(config.getMaxFileSize()).thenReturn(104857600L);
-        when(config.getAllowedContentTypes()).thenReturn(List.of("application/pdf"));
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(fileMetadataService.generateStorageFilename("document.pdf"))
                 .thenReturn("2024-11-09T14-30-00_document.pdf");
 
@@ -261,12 +241,6 @@ class UploadControllerTest {
                 "Excel content".getBytes()
         );
 
-        when(config.getMaxFileSize()).thenReturn(104857600L);
-        when(config.getAllowedContentTypes()).thenReturn(List.of(
-                "application/pdf",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        ));
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(fileMetadataService.generateStorageFilename("spreadsheet.xlsx"))
                 .thenReturn("2024-11-09T14-30-00_spreadsheet.xlsx");
 
@@ -295,9 +269,6 @@ class UploadControllerTest {
                 new byte[0]
         );
 
-        when(config.getMaxFileSize()).thenReturn(104857600L);
-        when(config.getAllowedContentTypes()).thenReturn(List.of("text/plain"));
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(fileMetadataService.generateStorageFilename("empty.txt"))
                 .thenReturn("2024-11-09T14-30-00_empty.txt");
 
@@ -323,9 +294,6 @@ class UploadControllerTest {
                 "Admin PDF content".getBytes()
         );
 
-        when(config.getMaxFileSize()).thenReturn(104857600L);
-        when(config.getAllowedContentTypes()).thenReturn(List.of("application/pdf"));
-        when(config.getStoragePath()).thenReturn("/tmp/luxback/backups");
         when(fileMetadataService.generateStorageFilename("admin-file.pdf"))
                 .thenReturn("2024-11-09T14-30-00_admin-file.pdf");
 
