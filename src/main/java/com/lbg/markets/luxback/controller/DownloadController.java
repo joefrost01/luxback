@@ -57,10 +57,13 @@ public class DownloadController {
             // Get original filename from audit records for better user experience
             String originalFilename = auditService.getOriginalFilename(username, filename);
 
+            // Get the input stream BEFORE creating the response - this way exceptions are caught
+            InputStream inputStream = storageService.readFile(path);
+
             // Create streaming response
             StreamingResponseBody stream = outputStream -> {
-                try (InputStream inputStream = storageService.readFile(path)) {
-                    inputStream.transferTo(outputStream);
+                try (InputStream is = inputStream) {
+                    is.transferTo(outputStream);
                 }
             };
 
