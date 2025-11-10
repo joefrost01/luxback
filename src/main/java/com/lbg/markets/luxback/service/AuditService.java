@@ -314,7 +314,8 @@ public class AuditService {
      * Extract username from audit file path
      */
     private String extractUsernameFromPath(String path) {
-        int lastSlash = path.lastIndexOf('/');
+        // Handle both Unix and Windows path separators
+        int lastSlash = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
         int lastDot = path.lastIndexOf('.');
 
         if (lastSlash >= 0 && lastDot > lastSlash) {
