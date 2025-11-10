@@ -42,6 +42,10 @@ public class FileListingController {
             @RequestParam(defaultValue = "0") int page,
             Model model) {
 
+        // Convert empty strings to null to avoid filtering on empty values
+        filename = (filename != null && filename.isBlank()) ? null : filename;
+        username = (username != null && username.isBlank()) ? null : username;
+
         // Build search criteria
         SearchCriteria criteria = SearchCriteria.builder()
                 .filename(filename)
