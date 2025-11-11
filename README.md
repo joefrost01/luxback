@@ -534,18 +534,6 @@ mvn test -Dtest=AuditServiceTest
         <artifactId>commons-csv</artifactId>
         <version>1.10.0</version>
     </dependency>
-    
-    <!-- WebJars -->
-    <dependency>
-        <groupId>org.webjars</groupId>
-        <artifactId>bootstrap</artifactId>
-        <version>5.3.0</version>
-    </dependency>
-    <dependency>
-        <groupId>org.webjars.npm</groupId>
-        <artifactId>dropzone</artifactId>
-        <version>6.0.0-beta.2</version>
-    </dependency>
 </dependencies>
 ```
 

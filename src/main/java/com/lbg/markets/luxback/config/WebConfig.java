@@ -41,12 +41,10 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Configure static resource handlers for WebJars and custom resources
+     * Configure static resource handlers
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // WebJars (Bootstrap, Dropzone) are automatically mapped by webjars-locator-core
-        // but we can add custom mappings if needed
         registry.addResourceHandler("/css/**")
                 .addResourceLocations("classpath:/static/css/");
 

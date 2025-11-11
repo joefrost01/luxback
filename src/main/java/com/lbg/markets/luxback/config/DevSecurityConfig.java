@@ -34,7 +34,7 @@ public class DevSecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
-                        .requestMatchers("/webjars/**", "/css/**", "/js/**", "/actuator/health").permitAll()
+                        .requestMatchers( "/css/**", "/js/**", "/actuator/health").permitAll()
                         // User endpoints - accessible by USER and ADMIN
                         .requestMatchers("/", "/upload").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
                         // Admin-only endpoints
