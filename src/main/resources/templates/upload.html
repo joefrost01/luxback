@@ -1,117 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <title>Upload Files - LuxBack</title>
+    <title layout:fragment="title">Upload Files - LuxBack</title>
 
-    <!-- Bootstrap CSS - Flatly theme -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/flatly/bootstrap.min.css">
-
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-
-    <!-- Dropzone CSS -->
-    <link rel="stylesheet"
-          href="https://unpkg.com/dropzone@6.0.0-beta.2/dist/dropzone.css">
-
-    <style>
-        .dropzone {
-            border: 2px dashed #2c3e50;
-            border-radius: 5px;
-            background: #ecf0f1;
-            padding: 20px;
-            min-height: 200px;
-            transition: all 0.3s ease;
-        }
-
-        .dropzone:hover {
-            border-color: #18bc9c;
-            background: #d5f4e6;
-        }
-
-        .dropzone.dz-drag-hover {
-            border-color: #18bc9c;
-            background: #d5f4e6;
-        }
-
-        .dropzone .dz-message {
-            font-size: 1.2rem;
-            color: #2c3e50;
-        }
-    </style>
+    <th:block layout:fragment="styles">
+        <link rel="stylesheet" href="https://unpkg.com/dropzone@6.0.0-beta.2/dist/dropzone.css">
+        <style>
+            .dropzone {
+                border: 2px dashed #2c3e50; border-radius: 5px;
+                background: #ecf0f1; padding: 20px; min-height: 200px; transition: .3s;
+            }
+            .dropzone:hover, .dropzone.dz-drag-hover { border-color: #18bc9c; background: #d5f4e6; }
+            .dropzone .dz-message { font-size: 1.2rem; color: #2c3e50; }
+        </style>
+    </th:block>
 </head>
 <body>
-<!-- Navigation bar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">
-            <i class="bi bi-cloud-arrow-up-fill"></i> LuxBack
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/">
-                        <i class="bi bi-upload"></i> Upload
-                    </a>
-                </li>
-                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                    <a class="nav-link" href="/files">
-                        <i class="bi bi-folder2-open"></i> Files
-                    </a>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button"
-                       data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle"></i>
-                        <span sec:authentication="name">User</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                                <span class="dropdown-item-text">
-                                    <small class="text-muted">Logged in as</small><br>
-                                    <strong sec:authentication="name">User</strong>
-                                </span>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li>
-                            <form th:action="@{/logout}" method="post">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                                <button class="dropdown-item" type="submit">
-                                    <i class="bi bi-box-arrow-right"></i> Logout
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<!-- Main content -->
-<main class="container mt-4">
+<section layout:fragment="content">
     <div class="row">
         <div class="col-md-8 offset-md-2">
-            <h1 class="mb-4">
-                <i class="bi bi-cloud-arrow-up"></i> Upload Files
-            </h1>
+            <h1 class="mb-4"><i class="bi bi-cloud-arrow-up"></i> Upload Files</h1>
 
             <div class="card">
                 <div class="card-body">
@@ -120,12 +30,7 @@
                         Maximum file size: <strong th:text="${maxFileSizeMB} + ' MB'">100 MB</strong>
                     </p>
 
-                    <!-- Dropzone upload area -->
-                    <form action="/upload"
-                          class="dropzone"
-                          id="fileDropzone"
-                          method="post"
-                          enctype="multipart/form-data">
+                    <form action="/upload" class="dropzone" id="fileDropzone" method="post" enctype="multipart/form-data">
                         <div class="dz-message" data-dz-message>
                             <i class="bi bi-cloud-arrow-up" style="font-size: 3rem;"></i>
                             <p>Drop files here or click to browse</p>
@@ -134,7 +39,6 @@
                 </div>
             </div>
 
-            <!-- Upload status messages -->
             <div id="uploadStatus" class="mt-3" style="display: none;">
                 <div class="alert alert-info">
                     <i class="bi bi-info-circle"></i>
@@ -143,117 +47,52 @@
             </div>
         </div>
     </div>
-</main>
+</section>
 
-<!-- Footer -->
-<footer class="mt-5 py-3 bg-light">
-    <div class="container text-center text-muted">
-        <small>LuxBack &copy; 2024 | Simple File Backup Service</small>
-    </div>
-</footer>
+<th:block layout:fragment="scripts">
+    <script src="https://unpkg.com/dropzone@6.0.0-beta.2/dist/dropzone-min.js"></script>
+    <script>
+        const token  = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+        const header = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        Dropzone.autoDiscover = false;
 
-<!-- Dropzone JS -->
-<script src="https://unpkg.com/dropzone@6.0.0-beta.2/dist/dropzone-min.js"></script>
+        const dz = new Dropzone("#fileDropzone", {
+            url: "/upload",
+            paramName: "file",
+            maxFilesize: /* MB */ [[${maxFileSize}]] / (1024 * 1024),
+            parallelUploads: 1,
+            uploadMultiple: false,
+            addRemoveLinks: true,
+            dictDefaultMessage: "Drop files here or click to browse",
+            headers: header && token ? { [header]: token } : {},
+            init() {
+                this.on("success", (file, response) => {
+                    const msg = (response && response.message) || "File uploaded successfully";
+                    showStatus("success", msg);
+                    setTimeout(() => this.removeFile(file), 2000);
+                });
+                this.on("error", (file, errorMessage) => {
+                    const msg = typeof errorMessage === 'string'
+                        ? errorMessage
+                        : (errorMessage && errorMessage.message) || "Upload failed. Please try again.";
+                    showStatus("error", msg);
+                    setTimeout(() => this.removeFile(file), 3000);
+                });
+            }
+        });
 
-<!-- Upload configuration -->
-<script>
-    // Get CSRF token from meta tags
-    var token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-    var header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-    console.log('CSRF Token:', token ? 'Found' : 'Missing');
-    console.log('CSRF Header:', header);
-
-    // Disable auto-discover to manually configure
-    Dropzone.autoDiscover = false;
-
-    // Initialize Dropzone
-    var myDropzone = new Dropzone("#fileDropzone", {
-        url: "/upload",
-        paramName: "file",
-        maxFilesize: [[${maxFileSize}]] / (1024 * 1024), // Convert to MB
-        parallelUploads: 1,
-        uploadMultiple: false,
-        addRemoveLinks: true,
-        dictDefaultMessage: "Drop files here or click to browse",
-
-        // Add CSRF token to headers
-        headers: {
-            [header]: token
-        },
-
-        init: function () {
-            this.on("sending", function (file, xhr, formData) {
-                console.log("Sending file:", file.name);
-                console.log("Adding CSRF token to request");
-            });
-
-            this.on("success", function (file, response) {
-                console.log("Upload successful:", response);
-                var message = response.message || "File uploaded successfully";
-                showStatus("success", message);
-
-                // Remove file from dropzone after 2 seconds
-                setTimeout(() => {
-                    this.removeFile(file);
-                }, 2000);
-            });
-
-            this.on("error", function (file, errorMessage, xhr) {
-                console.error("Upload failed:", errorMessage);
-                console.error("XHR status:", xhr ? xhr.status : 'N/A');
-
-                var message;
-                if (typeof errorMessage === 'string') {
-                    message = errorMessage;
-                } else if (errorMessage.message) {
-                    message = errorMessage.message;
-                } else {
-                    message = "Upload failed. Please try again.";
-                }
-
-                showStatus("error", message);
-
-                // Remove file from dropzone after 3 seconds
-                setTimeout(() => {
-                    this.removeFile(file);
-                }, 3000);
-            });
-
-            this.on("complete", function (file) {
-                console.log("Upload complete:", file.name);
-            });
+        function showStatus(type, message) {
+            const statusDiv = document.getElementById('uploadStatus');
+            const statusMessage = document.getElementById('statusMessage');
+            const alertDiv = statusDiv.querySelector('.alert');
+            alertDiv.className = 'alert ' + (type === 'success' ? 'alert-success' : 'alert-danger');
+            statusMessage.innerHTML = (type === 'success'
+                ? '<i class="bi bi-check-circle"></i> ' : '<i class="bi bi-exclamation-circle"></i> ') + message;
+            statusDiv.style.display = 'block';
+            setTimeout(() => statusDiv.style.display = 'none', 5000);
         }
-    });
-
-    function showStatus(type, message) {
-        const statusDiv = document.getElementById('uploadStatus');
-        const statusMessage = document.getElementById('statusMessage');
-        const alertDiv = statusDiv.querySelector('.alert');
-
-        alertDiv.className = 'alert';
-        if (type === 'success') {
-            alertDiv.classList.add('alert-success');
-            statusMessage.innerHTML = '<i class="bi bi-check-circle"></i> ' + message;
-        } else {
-            alertDiv.classList.add('alert-danger');
-            statusMessage.innerHTML = '<i class="bi bi-exclamation-circle"></i> ' + message;
-        }
-
-        statusDiv.style.display = 'block';
-
-        // Hide after 5 seconds
-        setTimeout(() => {
-            statusDiv.style.display = 'none';
-        }, 5000);
-    }
-
-    // Log when page is ready
-    console.log('Upload page loaded');
-    console.log('Dropzone initialized');
-</script>
+    </script>
+</th:block>
 </body>
 </html>

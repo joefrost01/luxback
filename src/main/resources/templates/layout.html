@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title != null ? title + ' - LuxBack' : 'LuxBack'}">LuxBack</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS - Flatly theme from Bootswatch -->
+    <!-- CSRF (site-wide) -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <title layout:fragment="title">LuxBack</title>
+
+    <!-- Styles -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/flatly/bootstrap.min.css">
-
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <!-- Custom CSS block for pages to override -->
-    <th:block th:fragment="customCss"></th:block>
+    <!-- Page-level styles -->
+    <th:block layout:fragment="styles"></th:block>
 </head>
 <body>
-<!-- Navigation bar -->
+
+<!-- Navbar (only when authenticated) -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary" sec:authorize="isAuthenticated()">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">
-            <i class="bi bi-cloud-arrow-up-fill"></i> LuxBack
-        </a>
+        <a class="navbar-brand" href="/"><i class="bi bi-cloud-arrow-up-fill"></i> LuxBack</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarNav" aria-controls="navbarNav"
@@ -35,14 +38,14 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link"
-                       th:classappend="${#httpServletRequest.requestURI == '/' or #httpServletRequest.requestURI == '/upload'} ? 'active'"
+                       th:classappend="${#httpServletRequest != null and (#httpServletRequest.requestURI == '/' or #httpServletRequest.requestURI == '/upload')} ? 'active' : ''"
                        href="/">
                         <i class="bi bi-upload"></i> Upload
                     </a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link"
-                       th:classappend="${#httpServletRequest.requestURI.startsWith('/files')} ? 'active'"
+                       th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/files')} ? 'active' : ''"
                        href="/files">
                         <i class="bi bi-folder2-open"></i> Files
                     </a>
@@ -58,14 +61,12 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                                <span class="dropdown-item-text">
-                                    <small class="text-muted">Logged in as</small><br>
-                                    <strong sec:authentication="name">User</strong>
-                                </span>
+              <span class="dropdown-item-text">
+                <small class="text-muted">Logged in as</small><br>
+                <strong sec:authentication="name">User</strong>
+              </span>
                         </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
+                        <li><hr class="dropdown-divider"></li>
                         <li>
                             <form th:action="@{/logout}" method="post">
                                 <button class="dropdown-item" type="submit">
@@ -80,24 +81,16 @@
     </div>
 </nav>
 
-<!-- Main content -->
 <main class="container mt-4">
-    <th:block th:fragment="content">
-        <!-- Page content goes here -->
-    </th:block>
+    <!-- Child pages inject here -->
+    <section layout:fragment="content">
+        <!-- Default content (optional) -->
+    </section>
 </main>
 
-<!-- Footer -->
-<footer class="mt-5 py-3 bg-light">
-    <div class="container text-center text-muted">
-        <small>LuxBack &copy; 2024 | Simple File Backup Service</small>
-    </div>
-</footer>
-
-<!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Custom JS block for pages to override -->
-<th:block th:fragment="customJs"></th:block>
+<!-- Page-level scripts -->
+<th:block layout:fragment="scripts"></th:block>
 </body>
 </html>
