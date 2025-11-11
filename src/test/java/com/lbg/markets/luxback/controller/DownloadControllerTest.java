@@ -156,11 +156,11 @@ class DownloadControllerTest {
     void downloadFile_shouldUseOriginalFilenameInHeader() throws Exception {
         // Arrange
         String fileContent = "Content";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(
-                fileContent.getBytes(StandardCharsets.UTF_8));
 
         when(storageService.exists(anyString())).thenReturn(true);
-        when(storageService.readFile(anyString())).thenReturn(inputStream);
+        when(storageService.readFile(anyString())).thenAnswer(invocation ->
+                new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8))
+        );
         when(auditService.getOriginalFilename("joe.bloggs", "2024-11-09T14-30-00_My_Document.pdf"))
                 .thenReturn("My Document.pdf");
 
@@ -175,11 +175,11 @@ class DownloadControllerTest {
     void downloadFile_shouldHandleFilenamesWithSpecialCharacters() throws Exception {
         // Arrange
         String fileContent = "Content";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(
-                fileContent.getBytes(StandardCharsets.UTF_8));
 
         when(storageService.exists(anyString())).thenReturn(true);
-        when(storageService.readFile(anyString())).thenReturn(inputStream);
+        when(storageService.readFile(anyString())).thenAnswer(invocation ->
+                new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8))
+        );
         when(auditService.getOriginalFilename("joe.bloggs", "2024-11-09T14-30-00_file_name.pdf"))
                 .thenReturn("file (copy).pdf");
 
@@ -194,11 +194,11 @@ class DownloadControllerTest {
     void downloadFile_shouldRecordDownloaderUsername() throws Exception {
         // Arrange
         String fileContent = "Content";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(
-                fileContent.getBytes(StandardCharsets.UTF_8));
 
         when(storageService.exists(anyString())).thenReturn(true);
-        when(storageService.readFile(anyString())).thenReturn(inputStream);
+        when(storageService.readFile(anyString())).thenAnswer(invocation ->
+                new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8))
+        );
         when(auditService.getOriginalFilename(anyString(), anyString())).thenReturn("document.pdf");
 
         // Act
@@ -219,10 +219,10 @@ class DownloadControllerTest {
     @WithMockUser(username = "admin", roles = "ADMIN")
     void downloadFile_shouldHandleEmptyFile() throws Exception {
         // Arrange - empty file
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(new byte[0]);
-
         when(storageService.exists(anyString())).thenReturn(true);
-        when(storageService.readFile(anyString())).thenReturn(inputStream);
+        when(storageService.readFile(anyString())).thenAnswer(invocation ->
+                new ByteArrayInputStream(new byte[0])
+        );
         when(auditService.getOriginalFilename(anyString(), anyString())).thenReturn("empty.txt");
 
         // Act & Assert
@@ -239,11 +239,11 @@ class DownloadControllerTest {
     void downloadFile_shouldWorkForAnyAdminUsername() throws Exception {
         // Arrange
         String fileContent = "Content";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(
-                fileContent.getBytes(StandardCharsets.UTF_8));
 
         when(storageService.exists(anyString())).thenReturn(true);
-        when(storageService.readFile(anyString())).thenReturn(inputStream);
+        when(storageService.readFile(anyString())).thenAnswer(invocation ->
+                new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8))
+        );
         when(auditService.getOriginalFilename(anyString(), anyString())).thenReturn("document.pdf");
 
         // Act
@@ -265,11 +265,11 @@ class DownloadControllerTest {
     void downloadFile_shouldConstructCorrectStoragePath() throws Exception {
         // Arrange
         String fileContent = "Content";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(
-                fileContent.getBytes(StandardCharsets.UTF_8));
 
         when(storageService.exists(anyString())).thenReturn(true);
-        when(storageService.readFile(anyString())).thenReturn(inputStream);
+        when(storageService.readFile(anyString())).thenAnswer(invocation ->
+                new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8))
+        );
         when(auditService.getOriginalFilename(anyString(), anyString())).thenReturn("document.pdf");
 
         // Act
@@ -286,11 +286,11 @@ class DownloadControllerTest {
     void downloadFile_shouldFallbackToStoredFilenameWhenOriginalNotFound() throws Exception {
         // Arrange
         String fileContent = "Content";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(
-                fileContent.getBytes(StandardCharsets.UTF_8));
 
         when(storageService.exists(anyString())).thenReturn(true);
-        when(storageService.readFile(anyString())).thenReturn(inputStream);
+        when(storageService.readFile(anyString())).thenAnswer(invocation ->
+                new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8))
+        );
         // Simulate audit service returning stored filename as fallback
         when(auditService.getOriginalFilename("joe.bloggs", "2024-11-09T14-30-00_document.pdf"))
                 .thenReturn("2024-11-09T14-30-00_document.pdf");
