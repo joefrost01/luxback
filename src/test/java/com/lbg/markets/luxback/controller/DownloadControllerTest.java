@@ -278,7 +278,8 @@ class DownloadControllerTest {
 
         // Assert - verify correct path was used
         verify(storageService).exists("/tmp/luxback/backups/joe.bloggs/2024-11-09T14-30-00_document.pdf");
-        verify(storageService).readFile("/tmp/luxback/backups/joe.bloggs/2024-11-09T14-30-00_document.pdf");
+        // readFile is now called twice: once for readability test, once for actual streaming
+        verify(storageService, times(2)).readFile("/tmp/luxback/backups/joe.bloggs/2024-11-09T14-30-00_document.pdf");
     }
 
     @Test

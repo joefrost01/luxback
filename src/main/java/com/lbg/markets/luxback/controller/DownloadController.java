@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -54,16 +55,23 @@ public class DownloadController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
 
+            // Verify file is readable BEFORE committing response
+            // This ensures exceptions are caught and proper status codes returned
+            // We immediately close it and will open a fresh stream in the lambda
+            try (InputStream testStream = storageService.readFile(path)) {
+                // Just testing readability - close immediately
+            } catch (IOException e) {
+                throw new StorageException("Failed to read file: " + path, e);
+            }
+
             // Get original filename from audit records for better user experience
             String originalFilename = auditService.getOriginalFilename(username, filename);
 
-            // Get the input stream BEFORE creating the response - this way exceptions are caught
-            InputStream inputStream = storageService.readFile(path);
-
-            // Create streaming response
+            // Create streaming response - open fresh stream inside lambda
+            // This ensures the stream is in a good state when actually used
             StreamingResponseBody stream = outputStream -> {
-                try (InputStream is = inputStream) {
-                    is.transferTo(outputStream);
+                try (InputStream inputStream = storageService.readFile(path)) {
+                    inputStream.transferTo(outputStream);
                 }
             };
 
