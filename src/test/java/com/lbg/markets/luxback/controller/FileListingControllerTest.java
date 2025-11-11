@@ -162,17 +162,17 @@ class FileListingControllerTest {
         mockMvc.perform(get("/files")
                         .param("page", "0"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("files", hasSize(50)))
+                .andExpect(model().attribute("files", hasSize(10)))
                 .andExpect(model().attribute("currentPage", 0))
-                .andExpect(model().attribute("totalPages", 2))
+                .andExpect(model().attribute("totalPages", 8))
                 .andExpect(model().attribute("totalResults", 75));
 
         // Act & Assert - second page
         mockMvc.perform(get("/files")
-                        .param("page", "1"))
+                        .param("page", "7"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("files", hasSize(25)))
-                .andExpect(model().attribute("currentPage", 1));
+                .andExpect(model().attribute("files", hasSize(5)))
+                .andExpect(model().attribute("currentPage", 7));
     }
 
     @Test
@@ -307,8 +307,8 @@ class FileListingControllerTest {
         // Act & Assert
         mockMvc.perform(get("/files"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("files", hasSize(50)))
-                .andExpect(model().attribute("totalPages", 1));
+                .andExpect(model().attribute("files", hasSize(10)))
+                .andExpect(model().attribute("totalPages", 5));
     }
 
     @Test
@@ -328,10 +328,10 @@ class FileListingControllerTest {
 
         // Act & Assert - page 1
         mockMvc.perform(get("/files")
-                        .param("page", "1"))
+                        .param("page", "5"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("files", hasSize(1)))
-                .andExpect(model().attribute("totalPages", 2));
+                .andExpect(model().attribute("totalPages", 6));
     }
 
     // Helper methods

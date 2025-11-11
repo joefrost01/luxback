@@ -294,13 +294,13 @@ class LuxbackIntegrationTest {
         mockMvc.perform(get("/files")
                         .param("page", "0"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("file25.pdf")));
+                .andExpect(content().string(containsString("file70.pdf")));
 
         // Check second page
         mockMvc.perform(get("/files")
-                        .param("page", "0"))
+                        .param("page", "1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("file50.pdf")));
+                .andExpect(content().string(containsString("file60.pdf")));
     }
 
     @Test
