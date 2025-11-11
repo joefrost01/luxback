@@ -13,22 +13,28 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
-      # 1) Set up Java 21
-      - name: Set up JDK 21
+      - name: Cache Maven Wrapper dist
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/wrapper
+          key: maven-wrapper-${{ runner.os }}-${{ env.JAVA_VERSION }}-${{ hashFiles('**/.mvn/wrapper/maven-wrapper.properties') }}
+
+      - name: Set up JDK 21 (with Maven cache)
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
+          distribution: temurin
           cache: maven
 
-      # 2) Run tests
-      - name: Run tests
-        run: ./mvnw test
+      # Prefetch all deps into the cache (no tests yet)
+      - name: Prime Maven cache (offline)
+        run: ./mvnw -B -DskipTests dependency:go-offline
 
-      # 3) Build the application
-      - name: Build application
-        run: ./mvnw clean package -DskipTests
+      - name: Run tests
+        run: ./mvnw -B test
+
+      - name: Build
+        run: ./mvnw -B -DskipTests clean package
