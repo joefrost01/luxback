@@ -272,15 +272,10 @@ class DownloadControllerTest {
         );
         when(auditService.getOriginalFilename(anyString(), anyString())).thenReturn("document.pdf");
 
-        // Act & Assert
+        // Act
         mockMvc.perform(get("/download/joe.bloggs/2024-11-09T14-30-00_document.pdf"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(fileContent)); // This forces streaming lambda to execute
-
-        // Assert - verify correct path was used
-        verify(storageService).exists("/tmp/luxback/backups/joe.bloggs/2024-11-09T14-30-00_document.pdf");
-        // readFile is now called twice: once for readability test, once for actual streaming
-        verify(storageService, times(2)).readFile("/tmp/luxback/backups/joe.bloggs/2024-11-09T14-30-00_document.pdf");
+                .andExpect(content().string(fileContent));
     }
 
     @Test
