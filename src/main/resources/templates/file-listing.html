@@ -8,14 +8,22 @@
 </head>
 <body>
 <section layout:fragment="content">
-    <h1 class="mb-4"><i class="bi bi-folder2-open"></i> File Browser</h1>
+    <h3 class="mb-1"><i class="bi bi-folder2-open"></i> File Browser</h3>
 
     <!-- Search -->
-    <div class="card mb-4">
+    <div class="card mb-1">
         <div class="card-body">
-            <h5 class="card-title"><i class="bi bi-search"></i> Search Files</h5>
+
+            <div class="row mt-1">
+                <h5 class="col-md-10 card-title"><i class="bi bi-search"></i> Search Files</h5>
+                <div class="col-md-2">
+                    <a href="/files" class="btn btn-link btn-sm">
+                        <i class="bi bi-x-circle"></i> Clear Filters
+                    </a>
+                </div>
+            </div>
             <form method="get" action="/files">
-                <div class="row g-3">
+                <div class="row g-2">
                     <div class="col-md-3">
                         <label for="filename" class="form-label">Filename</label>
                         <input type="text" class="form-control" id="filename" name="filename"
@@ -42,30 +50,57 @@
                         </button>
                     </div>
                 </div>
-                <div class="row mt-2">
-                    <div class="col-md-12">
-                        <a href="/files" class="btn btn-link btn-sm">
-                            <i class="bi bi-x-circle"></i> Clear Filters
-                        </a>
-                    </div>
-                </div>
+
             </form>
         </div>
     </div>
 
     <!-- Summary -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-0">
         <div class="text-muted">
             Showing <strong th:text="${files.size()}">0</strong>
             of <strong th:text="${totalResults}">0</strong> files
         </div>
+        <!-- Pagination -->
+        <nav th:if="${totalPages > 1}" class="mt-2">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/files(page=${currentPage - 1}, filename=${criteria?.filename},
+                             username=${criteria?.username}, startDate=${criteria?.startDate},
+                             endDate=${criteria?.endDate})}">
+                        Previous
+                    </a>
+                </li>
+
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:if="${i >= currentPage - 2 and i <= currentPage + 2}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/files(page=${i}, filename=${criteria?.filename},
+                             username=${criteria?.username}, startDate=${criteria?.startDate},
+                             endDate=${criteria?.endDate})}"
+                       th:text="${i + 1}">1</a>
+                </li>
+
+                <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/files(page=${currentPage + 1}, filename=${criteria?.filename},
+                             username=${criteria?.username}, startDate=${criteria?.startDate},
+                             endDate=${criteria?.endDate})}">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <!-- Table / Empty -->
     <div class="card">
         <div class="card-body">
             <div class="table-responsive" th:if="${!files.isEmpty()}">
-                <table class="table table-hover">
+                <table class="table table-hover table-sm">
                     <thead>
                     <tr>
                         <th>Filename</th>
@@ -107,39 +142,7 @@
         </div>
     </div>
 
-    <!-- Pagination -->
-    <nav th:if="${totalPages > 1}" class="mt-4">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/files(page=${currentPage - 1}, filename=${criteria?.filename},
-                             username=${criteria?.username}, startDate=${criteria?.startDate},
-                             endDate=${criteria?.endDate})}">
-                    Previous
-                </a>
-            </li>
 
-            <li class="page-item"
-                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                th:if="${i >= currentPage - 2 and i <= currentPage + 2}"
-                th:classappend="${i == currentPage} ? 'active'">
-                <a class="page-link"
-                   th:href="@{/files(page=${i}, filename=${criteria?.filename},
-                             username=${criteria?.username}, startDate=${criteria?.startDate},
-                             endDate=${criteria?.endDate})}"
-                   th:text="${i + 1}">1</a>
-            </li>
-
-            <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/files(page=${currentPage + 1}, filename=${criteria?.filename},
-                             username=${criteria?.username}, startDate=${criteria?.startDate},
-                             endDate=${criteria?.endDate})}">
-                    Next
-                </a>
-            </li>
-        </ul>
-    </nav>
 </section>
 </body>
 </html>

@@ -26,7 +26,7 @@ public class FileListingController {
 
     private final AuditService auditService;
 
-    private static final int PAGE_SIZE = 50;
+    private static final int PAGE_SIZE = 10;
 
     /**
      * Display file listing page with search and pagination.
