@@ -3,6 +3,7 @@ package com.lbg.markets.luxback;
 import com.lbg.markets.luxback.config.TestConfig;
 import com.lbg.markets.luxback.service.AuditService;
 import com.lbg.markets.luxback.service.StorageService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -15,7 +16,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -31,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev-local")
-@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class, TestConfig.class})
+@Import({com.lbg.markets.luxback.config.DevSecurityConfig.class})
 class LuxbackIntegrationTest {
 
     @Autowired
@@ -47,9 +52,33 @@ class LuxbackIntegrationTest {
     Path tempDir;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         // Tests run with dev-local profile which uses /tmp/luxback/
-        // Each test is isolated through Spring's transaction management
+        // Ensure directories exist before each test - critical for CI environments
+        Path backupsDir = Paths.get("/tmp/luxback/backups");
+        Path auditDir = Paths.get("/tmp/luxback/audit-indexes");
+
+        Files.createDirectories(backupsDir);
+        Files.createDirectories(auditDir);
+    }
+
+    @AfterEach
+    void tearDown() throws IOException {
+        // Clean up test files after each test to ensure isolation
+        Path luxbackDir = Paths.get("/tmp/luxback");
+        if (Files.exists(luxbackDir)) {
+            try (var walk = Files.walk(luxbackDir)) {
+                walk.sorted(Comparator.reverseOrder())
+                        .forEach(path -> {
+                            try {
+                                Files.deleteIfExists(path);
+                            } catch (IOException e) {
+                                // Log but don't fail the test
+                                System.err.println("Failed to delete: " + path);
+                            }
+                        });
+            }
+        }
     }
 
     @Test
