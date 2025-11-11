@@ -63,11 +63,14 @@ class DownloadControllerTest {
     void downloadFile_shouldSucceedForAdmin() throws Exception {
         // Arrange
         String fileContent = "Test file content";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(
-                fileContent.getBytes(StandardCharsets.UTF_8));
 
         when(storageService.exists(anyString())).thenReturn(true);
-        when(storageService.readFile(anyString())).thenReturn(inputStream);
+
+        // Use thenAnswer to create a fresh InputStream each time - critical for streaming tests
+        when(storageService.readFile(anyString())).thenAnswer(invocation ->
+                new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8))
+        );
+
         when(auditService.getOriginalFilename("joe.bloggs", "2024-11-09T14-30-00_document.pdf"))
                 .thenReturn("document.pdf");
 
@@ -128,10 +131,14 @@ class DownloadControllerTest {
         for (int i = 0; i < largeContent.length; i++) {
             largeContent[i] = (byte) (i % 256);
         }
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(largeContent);
 
         when(storageService.exists(anyString())).thenReturn(true);
-        when(storageService.readFile(anyString())).thenReturn(inputStream);
+
+        // Use thenAnswer for fresh stream
+        when(storageService.readFile(anyString())).thenAnswer(invocation ->
+                new ByteArrayInputStream(largeContent)
+        );
+
         when(auditService.getOriginalFilename("joe.bloggs", "2024-11-09T14-30-00_large.bin"))
                 .thenReturn("large.bin");
 
