@@ -1,6 +1,5 @@
 package com.lbg.markets.luxback;
 
-import com.lbg.markets.luxback.config.TestConfig;
 import com.lbg.markets.luxback.service.AuditService;
 import com.lbg.markets.luxback.service.StorageService;
 import org.junit.jupiter.api.AfterEach;
