@@ -1,5 +1,6 @@
 package com.lbg.markets.luxback;
 
+import com.lbg.markets.luxback.config.LuxBackConfig;
 import com.lbg.markets.luxback.service.AuditService;
 import com.lbg.markets.luxback.service.StorageService;
 import org.junit.jupiter.api.AfterEach;
@@ -45,38 +46,39 @@ class LuxbackIntegrationTest {
     private StorageService storageService;
 
     @Autowired
-    private AuditService auditService;
-
-    @TempDir
-    Path tempDir;
+    private LuxBackConfig config;
 
     @BeforeEach
     void setUp() throws IOException {
-        // Tests run with dev-local profile which uses /tmp/luxback/
-        // Ensure directories exist before each test - critical for CI environments
-        Path backupsDir = Paths.get("/tmp/luxback/backups");
-        Path auditDir = Paths.get("/tmp/luxback/audit-indexes");
+        // Ensure directories exist before each test
+        Path storagePath = Paths.get(config.getStoragePath());
+        Path auditPath = Paths.get(config.getAuditIndexPath());
 
-        Files.createDirectories(backupsDir);
-        Files.createDirectories(auditDir);
+        Files.createDirectories(storagePath);
+        Files.createDirectories(auditPath);
     }
 
     @AfterEach
     void tearDown() throws IOException {
-        // Clean up test files after each test to ensure isolation
-        Path luxbackDir = Paths.get("/tmp/luxback");
-        if (Files.exists(luxbackDir)) {
-            try (var walk = Files.walk(luxbackDir)) {
-                walk.sorted(Comparator.reverseOrder())
-                        .forEach(path -> {
-                            try {
-                                Files.deleteIfExists(path);
-                            } catch (IOException e) {
-                                // Log but don't fail the test
-                                System.err.println("Failed to delete: " + path);
-                            }
-                        });
-            }
+        // Optional: Clean up after each test for isolation
+        Path storagePath = Paths.get(config.getStoragePath());
+        Path auditPath = Paths.get(config.getAuditIndexPath());
+
+        deleteDirectoryRecursively(storagePath);
+        deleteDirectoryRecursively(auditPath);
+    }
+
+    private void deleteDirectoryRecursively(Path path) throws IOException {
+        if (Files.exists(path)) {
+            Files.walk(path)
+                    .sorted(Comparator.reverseOrder())
+                    .forEach(p -> {
+                        try {
+                            Files.delete(p);
+                        } catch (IOException e) {
+                            // Log but don't fail
+                        }
+                    });
         }
     }
 
