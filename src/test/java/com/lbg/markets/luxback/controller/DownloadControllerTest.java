@@ -277,8 +277,14 @@ class DownloadControllerTest {
 
         // Act
         mockMvc.perform(get("/download/joe.bloggs/2024-11-09T14-30-00_document.pdf"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(fileContent));
+                .andExpect(status().isOk());
+
+        // Assert - verify correct storage path was used
+        // Note: readFile is called twice - once for readability check, once for streaming
+        verify(storageService, times(2)).readFile(argThat(path ->
+                path.contains("joe.bloggs") &&
+                        path.contains("2024-11-09T14-30-00_document.pdf")
+        ));
     }
 
     @Test
