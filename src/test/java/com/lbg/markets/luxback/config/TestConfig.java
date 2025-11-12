@@ -28,8 +28,8 @@ public class TestConfig {
         config.setSecurity(security);
 
         // Initialize other properties
-        config.setStoragePath("/tmp/luxback/backups");
-        config.setAuditIndexPath("/tmp/luxback/audit-indexes");
+        config.setStoragePath("test_data/backups");
+        config.setAuditIndexPath("test_data/audit-indexes");
         config.setMaxFileSize(104857600L); // 100MB
         config.setAllowedContentTypes(List.of(
                 "application/pdf",

@@ -1,6 +1,6 @@
 luxback:
-  storage-path: /tmp/luxback/backups
-  audit-index-path: /tmp/luxback/audit-indexes
+  storage-path: test_data/backups
+  audit-index-path: test_data/audit-indexes
   max-file-size: 104857600  # 100MB
   allowed-content-types:
     - application/pdf

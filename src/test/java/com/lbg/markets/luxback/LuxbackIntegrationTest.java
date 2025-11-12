@@ -102,7 +102,7 @@ class LuxbackIntegrationTest {
                 .andExpect(jsonPath("$.message").value("File uploaded successfully: test-document.pdf"));
 
         // Verify file was stored
-        String auditCsv = storageService.readString("/tmp/luxback/audit-indexes/testuser.csv");
+        String auditCsv = storageService.readString(config.getAuditIndexPath()+"/testuser.csv");
         assertThat(auditCsv).contains("UPLOAD");
         assertThat(auditCsv).contains("test-document.pdf");
     }
@@ -132,7 +132,7 @@ class LuxbackIntegrationTest {
                 .andExpect(content().string(containsString("admin-report.xlsx")));
 
         // Step 3: Get the stored filename from audit
-        String auditCsv = storageService.readString("/tmp/luxback/audit-indexes/admin.csv");
+        String auditCsv = storageService.readString(config.getAuditIndexPath()+"/admin.csv");
         String[] lines = auditCsv.split("\n");
         // Last line should be the upload event
         String lastLine = lines[lines.length - 1];
@@ -147,7 +147,7 @@ class LuxbackIntegrationTest {
                 .andExpect(content().bytes("Excel content for integration test".getBytes()));
 
         // Verify download was audited
-        auditCsv = storageService.readString("/tmp/luxback/audit-indexes/admin.csv");
+        auditCsv = storageService.readString(config.getAuditIndexPath()+"/admin.csv");
         assertThat(auditCsv).contains("DOWNLOAD");
     }
 
@@ -179,11 +179,11 @@ class LuxbackIntegrationTest {
                 .andExpect(status().isOk());
 
         // Verify separate audit files were created
-        assertThat(storageService.exists("/tmp/luxback/audit-indexes/user1.csv")).isTrue();
-        assertThat(storageService.exists("/tmp/luxback/audit-indexes/user2.csv")).isTrue();
+        assertThat(storageService.exists(config.getAuditIndexPath()+"/user1.csv")).isTrue();
+        assertThat(storageService.exists(config.getAuditIndexPath()+"/user2.csv")).isTrue();
 
-        String user1Audit = storageService.readString("/tmp/luxback/audit-indexes/user1.csv");
-        String user2Audit = storageService.readString("/tmp/luxback/audit-indexes/user2.csv");
+        String user1Audit = storageService.readString(config.getAuditIndexPath()+"/user1.csv");
+        String user2Audit = storageService.readString(config.getAuditIndexPath()+"/user2.csv");
 
         assertThat(user1Audit).contains("user1-doc.pdf");
         assertThat(user1Audit).doesNotContain("user2-doc.pdf");
@@ -322,7 +322,7 @@ class LuxbackIntegrationTest {
                 .andExpect(status().isOk());
 
         // Get stored filename from audit
-        String auditCsv = storageService.readString("/tmp/luxback/audit-indexes/admin.csv");
+        String auditCsv = storageService.readString(config.getAuditIndexPath()+"/admin.csv");
         String[] lines = auditCsv.split("\n");
         String lastLine = lines[lines.length - 1];
         String[] fields = lastLine.split(",");
@@ -333,7 +333,7 @@ class LuxbackIntegrationTest {
                 .andExpect(status().isOk());
 
         // Verify both events are in audit
-        auditCsv = storageService.readString("/tmp/luxback/audit-indexes/admin.csv");
+        auditCsv = storageService.readString(config.getAuditIndexPath()+"/admin.csv");
         assertThat(auditCsv.split("\n")).hasSizeGreaterThan(2); // Header + UPLOAD + DOWNLOAD
         assertThat(auditCsv).contains("UPLOAD");
         assertThat(auditCsv).contains("DOWNLOAD");
